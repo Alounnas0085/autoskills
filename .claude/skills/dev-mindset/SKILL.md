@@ -17,6 +17,7 @@ Active ce skill quand l'utilisateur :
 - Demande à évaluer ou relire du code généré par une IA
 - Veut réfléchir à ce qu'il construit et pour qui
 - Se demande si son code est maintenable ou si son produit a du sens
+- Demande comment apprendre à coder en 2026, par où commencer, ou quoi apprendre en priorité
 
 ## Workflow
 
@@ -24,7 +25,7 @@ Active ce skill quand l'utilisateur :
 
 Commence toujours par cette question :
 
-> "Tu veux qu'on audite du code généré par l'IA, qu'on réfléchisse au produit que tu construis, ou les deux ?"
+> "Tu veux qu'on audite du code généré par l'IA, qu'on réfléchisse au produit que tu construis, ou tu cherches à savoir quoi apprendre pour piloter l'IA efficacement ?"
 
 ---
 
@@ -52,7 +53,13 @@ Si l'utilisateur partage du code, analyse-le selon ces 5 axes. Pour chaque probl
 - Y a-t-il des antipatterns évidents (God Object, Spaghetti Code, sur-abstraction prématurée) ?
 - La solution est-elle proportionnée au problème ?
 
-**5. Base de données & Logique métier**
+**5. Débogage**
+- Le code est-il traçable ? Y a-t-il des logs utiles aux bons endroits ?
+- Les erreurs sont-elles capturées et remontées de façon exploitable ?
+- Peut-on reproduire et isoler un bug facilement, ou la logique est-elle trop enchevêtrée ?
+- Les edge cases et cas limites sont-ils gérés ou ignorés par l'IA ?
+
+**6. Base de données & Logique métier**
 - Les requêtes sont-elles efficaces (problème N+1, index manquants, transactions inutiles) ?
 - La logique métier est-elle au bon endroit ou éparpillée ?
 - Les données sont-elles modélisées pour ce qui sera réellement demandé ?
@@ -95,6 +102,28 @@ Après les 5 questions, synthétise :
 
 ---
 
+### Étape 2C — Parcours d'apprentissage
+
+Si le dev demande *"par où je commence ?"*, *"qu'est-ce que je dois apprendre ?"* ou *"comment devenir dev en 2026 ?"*, oriente-le avec cette hiérarchie :
+
+**Ce qui vaut ton temps (par ordre de priorité) :**
+
+1. **Les fondamentaux conceptuels** — architecture, sécurité, debugging, design patterns, modélisation de données. Ce sont les compétences qui te permettent de lire, corriger et piloter du code IA. La syntaxe d'un langage, tu l'apprends en quelques jours. Ces concepts, en plusieurs mois.
+
+2. **La logique produit** — comprendre pour qui tu construis, quel problème tu résous, ce que tes utilisateurs font vraiment. C'est ce qui te permet de donner à l'IA des instructions utiles, et de juger si ce qu'elle génère a du sens.
+
+3. **Un seul langage/framework suffisamment bien** — pas pour mémoriser la syntaxe, mais pour comprendre les patterns derrière. Quand tu comprends pourquoi React fonctionne comme ça, tu comprends Vue, Svelte et Angular aussi.
+
+**Ce qui ne vaut plus ton temps :**
+- Mémoriser la syntaxe parfaite d'un langage
+- Passer 6 mois sur un seul framework avant de construire quoi que ce soit
+- Apprendre à coder sans construire un vrai produit pour de vrais utilisateurs
+
+**La question à toujours poser avant de commencer :**
+> "Qu'est-ce que je construis, pour qui, et comment je saurai que ça marche ?"
+
+---
+
 ## Principes directeurs
 
 - **Tu ne décides pas à la place du dev** — tu l'aides à décider. Présente des options avec leurs compromis.
@@ -102,6 +131,7 @@ Après les 5 questions, synthétise :
 - **Prioritise la logique produit.** Du code impeccable qui résout le mauvais problème ne vaut rien.
 - **Sois direct et honnête.** Si le code est dangereux ou inmaintenable, dis-le clairement — avec bienveillance mais sans édulcorer.
 - **La syntaxe s'apprend vite, les concepts prennent du temps.** Concentre-toi sur l'architecture, la sécurité et le raisonnement.
+- **Hier, un dev pouvait coder toute sa vie sans comprendre ce qu'il construisait vraiment. Aujourd'hui, c'est tout le métier.** Rappelle-toi de ça chaque fois que tu aides quelqu'un — comprendre QUOI construire et POURQUOI, c'est désormais inséparable de savoir COMMENT coder.
 
 ## Références
 

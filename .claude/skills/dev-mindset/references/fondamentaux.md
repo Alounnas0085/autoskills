@@ -26,6 +26,20 @@ Un composant ne doit avoir accès qu'à ce dont il a strictement besoin — ni p
 **Validation à la frontière**
 Tout ce qui vient de l'extérieur (utilisateur, API, fichier) est suspect. Valider, typer, assainir avant tout traitement interne.
 
+## Débogage
+
+**Traçabilité**
+Un code impossible à déboguer est un code impossible à maintenir. Les logs doivent être informatifs (contexte + valeurs), pas juste "erreur ici". L'IA génère souvent des logs vides ou des `console.log` sans structure.
+
+**Gestion des erreurs**
+Attraper une erreur sans la traiter ou sans la remonter est pire que de ne pas l'attraper — ça cache le problème. Chaque `catch` doit avoir une intention claire : loguer, propager, ou récupérer.
+
+**Edge cases**
+L'IA optimise pour le cas nominal. Elle oublie : valeurs nulles, tableaux vides, timeouts réseau, permissions manquantes, données corrompues. Toujours demander : *"qu'est-ce qui se passe si cette valeur est null ? si l'API ne répond pas ? si l'utilisateur n'a pas les droits ?"*
+
+**Isolation**
+Un bug difficile à reproduire est souvent un bug dans du code trop couplé. Si tu ne peux pas tester une fonction seule, c'est un signal d'alerte architectural.
+
 ## Design Patterns
 
 **Quand utiliser un pattern**
