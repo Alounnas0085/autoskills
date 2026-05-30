@@ -1,6 +1,114 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Monorepo structure
+
+This is a pnpm monorepo with two distinct parts:
+
+- **Root** — the `autoskills.sh` marketing website (Astro + Tailwind CSS v4)
+- **`packages/autoskills/`** — the `autoskills` CLI published to npm (`npx autoskills`)
+
+These have separate `package.json` files and separate dependency installs. Most development happens in `packages/autoskills/`.
+
+## Commands
+
+### Website (root)
+
+```bash
+pnpm dev          # Start Astro dev server
+pnpm build        # Build static site
+pnpm lint         # Run oxlint
+pnpm lint:fix     # Auto-fix lint issues
+pnpm fmt          # Format with oxfmt
+pnpm fmt:check    # Check formatting without writing
+```
+
+### CLI package (`packages/autoskills/`)
+
+```bash
+pnpm test                           # Run all tests
+node --test 'tests/detect.test.ts'  # Run a single test file
+pnpm build                          # Compile TypeScript to dist/
+```
+
+Install CLI dependencies separately — the root `pnpm install` does not install them:
+
+```bash
+cd packages/autoskills && pnpm install
+```
+
+## Architecture
+
+### CLI execution flow
+
+`index.mjs` is the bin entry point. It checks the Node version, then either runs `dist/main.js` (compiled) or falls back to `main.ts` directly using Node's `--experimental-strip-types`. This means the CLI runs TypeScript source without a build step in development.
+
+The main flow in `main.ts`:
+1. **Detect** — `detectTechnologies(projectDir)` in `lib.ts` scans `package.json`, `deno.json`, Gemfile, config files, and workspace members
+2. **Collect** — `collectSkills()` deduplicates skills from all detected technologies and combos
+3. **Select** — interactive terminal UI (`ui.ts`) or auto-yes mode
+4. **Install** — `installAll()` in `installer.ts` runs `npx skills add` with concurrency=6, sorted by repo to batch same-origin installs
+5. **Generate** — `generateClaudeMd()` in `claude.ts` scans `.claude/skills/` and rewrites the `<!-- autoskills:start/end -->` block in `CLAUDE.md`
+
+### Key files
+
+| File | Responsibility |
+|------|---------------|
+| `skills-map.ts` | Static data: `SKILLS_MAP` (technology → skill IDs), `COMBO_SKILLS_MAP`, `AGENT_FOLDER_MAP` |
+| `lib.ts` | Detection logic, workspace resolution, skill collection |
+| `installer.ts` | Spawns `skills` CLI per skill, animated progress rendering |
+| `claude.ts` | Parses `.claude/skills/` markdown and generates CLAUDE.md summaries |
+| `ui.ts` | Raw terminal multi-select with keyboard shortcuts |
+| `colors.ts` | `log`/`write` wrappers and ANSI color helpers |
+
+### Adding a new technology
+
+1. Add an entry to `SKILLS_MAP` in `skills-map.ts` with `id`, `name`, `detect`, and `skills`
+2. Skill IDs follow the format `author/repo/skill-name` (resolved via skills.sh registry)
+3. For combo skills (e.g. Next.js + Supabase), add to `COMBO_SKILLS_MAP` with a `requires` array of technology IDs
+4. Add an SVG icon to `src/icons/` for the website (filename must match the technology ID, lowercased, spaces→hyphens)
+
+### Agent detection
+
+`detectAgents()` in `lib.ts` checks for `~/.<agentfolder>/skills/` directories in the user's home to determine which AI editors are installed. The mapping is in `AGENT_FOLDER_MAP` in `skills-map.ts`. The special agent `"universal"` is always included.
+
+## Conventions
+
+### Dependency pinning (supply chain hardening)
+
+**Never use `^` or `~`** in version specifiers anywhere in this repo. All dependencies must be pinned to exact versions. Always commit lockfiles. See `AGENTS.md` for the full policy.
+
+### CLI output
+
+Inside `packages/autoskills/`, never use `console.log` or `process.stdout.write` directly. Use `log` and `write` from `colors.ts`:
+
+```ts
+import { log, write } from "./colors.ts";
+```
+
+### Tests
+
+Tests use Node.js built-in `node:test` and `node:assert/strict`. Always destructure the specific assert functions — do not import the default object:
+
+```ts
+// ✅
+import { ok, strictEqual, deepStrictEqual } from "node:assert/strict";
+
+// ❌
+import assert from "node:assert/strict";
+```
+
+Use the shared helpers in `tests/helpers.ts` (`useTmpDir`, `writePackageJson`, `writeJson`, `writeFile`, `addWorkspace`) for all filesystem setup in tests.
+
 <!-- autoskills:start -->
+
+## Dev en Ère IA (`/dev`)
+
+Auditer du code généré par l'IA, guider la réflexion produit, orienter l'apprentissage, et enseigner les fondamentaux (architecture, sécurité, débogage, design patterns, bases de données). Use when asked to review AI-generated code, when the user wants to think through what they're building and for whom, when asked how to learn to code in 2026, or when invoked via `/dev`.
+
+- `.claude/skills/dev-mindset/SKILL.md`
+- `.claude/skills/dev-mindset/references/fondamentaux.md`: Concepts clés à enseigner lors d'un audit : architecture, sécurité, design patterns, bases de données, logique produit.
 
 Summary generated by `autoskills`. Check the full files inside `.claude/skills`.
 
@@ -57,7 +165,7 @@ Optimize for search engine visibility and ranking. Use when asked to "improve SE
 
 ## Tailwind CSS Development Patterns
 
-Provides comprehensive Tailwind CSS utility-first styling patterns including responsive design, layout utilities, flexbox, grid, spacing, typography, colors, and modern CSS best practices. Use when styling React/Vue/Svelte components, building responsive layouts, implementing design systems, or o...
+Provides comprehensive Tailwind CSS utility-first CSS patterns including responsive design, layout utilities, flexbox, grid, spacing, typography, colors, and modern CSS best practices. Use when styling React/Vue/Svelte components, building responsive layouts, implementing design systems, or o...
 
 - `.claude/skills/tailwind-css-patterns/SKILL.md`
 - `.claude/skills/tailwind-css-patterns/references/accessibility.md`

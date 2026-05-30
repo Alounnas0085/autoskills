@@ -25,5 +25,6 @@ pnpm-debug.log*
 
 # generated AI agent skills
 .agents/
-.claude/
+.claude/*
+!.claude/skills/
 skills-lock.json
