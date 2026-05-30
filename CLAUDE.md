@@ -75,4 +75,10 @@ Master TypeScript's advanced type system including generics, conditional types, 
 
 - `.claude/skills/typescript-advanced-types/SKILL.md`
 
+## One-Person Economy — Operator Patterns
+
+Design and build autonomous, agent-driven systems that let a single operator run what previously required a team. Use when building AI agent workflows, persistent memory systems (in-context, semantic, structured), multi-agent pipelines, overnight execution loops, or any "one-person stack" architecture. Covers tool use, prompt caching, iteration speed patterns, and operator review surfaces.
+
+- `SKILLS.md`
+
 <!-- autoskills:end -->
